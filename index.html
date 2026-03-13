@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alimenta Almacén y Café</title>
+<meta name="description" content="Café, alimentos naturales y sabores caseros. Un rincón acogedor para disfrutar del buen café y la comida hecha con amor.">
+
+<!-- FAVICON: emoji café como icono de pestaña -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --cream: #FAF6F0;
+    --beige: #F2EAD8;
+    --beige-mid: #E8DCCA;
+    --sand: #D4C4A8;
+    --coffee-light: #C4986A;
+    --coffee: #8B5E3C;
+    --coffee-dark: #5C3D2E;
+    --espresso: #2C1810;
+    --text: #3D2B1F;
+    --text-light: #7A6355;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Lato', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 14px 24px; display: flex; justify-content: space-between; align-items: center;
+    background: rgba(250,246,240,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(139,94,60,0.12); transition: background 0.3s;
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: var(--coffee-dark); line-height: 1.2; }
+  .nav-logo span { display: block; font-size: 10px; font-family: 'Lato', sans-serif; font-weight: 300; color: var(--coffee-light); letter-spacing: 0.15em; text-transform: uppercase; }
+  .nav-links { display: flex; gap: 20px; }
+  .nav-links a { font-size: 13px; color: var(--text-light); text-decoration: none; letter-spacing: 0.05em; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--coffee); }
+
+  /* ── HERO SLIDER ── */
+  #hero {
+    min-height: 100svh; position: relative; display: flex; align-items: flex-end; overflow: hidden;
+    background: var(--espresso);
+  }
+  .hero-slides { position: absolute; inset: 0; }
+  .hero-slide {
+    position: absolute; inset: 0;
+    opacity: 0; transition: opacity 1.2s ease-in-out;
+    background-size: cover; background-position: center;
+  }
+  .hero-slide.active { opacity: 1; }
+  .hero-slide::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(44,24,16,0.15) 0%, rgba(44,24,16,0.55) 55%, rgba(44,24,16,0.88) 100%);
+  }
+
+  /* Dots */
+  .hero-dots {
+    position: absolute; bottom: 160px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 8px; z-index: 3;
+  }
+  .hero-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: rgba(250,246,240,0.4); border: none; cursor: pointer;
+    transition: background 0.3s, transform 0.3s; padding: 0;
+  }
+  .hero-dot.active { background: var(--coffee-light); transform: scale(1.3); }
+
+  /* Arrows */
+  .hero-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    z-index: 3; background: rgba(250,246,240,0.15); border: 1px solid rgba(250,246,240,0.3);
+    color: #FAF6F0; width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background 0.2s; backdrop-filter: blur(4px);
+  }
+  .hero-arrow:hover { background: rgba(250,246,240,0.25); }
+  .hero-arrow.prev { left: 16px; }
+  .hero-arrow.next { right: 16px; }
+  .hero-arrow svg { width: 18px; height: 18px; }
+
+  .hero-content { position: relative; z-index: 2; padding: 48px 28px 56px; width: 100%; animation: fadeUp 1s 0.3s both; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  .hero-tag {
+    display: inline-block; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--coffee-light); margin-bottom: 14px; border: 1px solid rgba(196,152,106,0.5);
+    padding: 5px 14px; border-radius: 20px;
+  }
+  .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(42px, 12vw, 72px); font-weight: 700; color: #FAF6F0; line-height: 1.08; margin-bottom: 12px; text-shadow: 0 2px 20px rgba(0,0,0,0.3); }
+  .hero-title em { font-style: italic; color: var(--coffee-light); }
+  .hero-subtitle { font-size: 15px; font-weight: 300; color: rgba(250,246,240,0.8); margin-bottom: 32px; line-height: 1.6; }
+  .hero-buttons { display: flex; flex-direction: column; gap: 10px; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: flex; align-items: center; justify-content: center; gap: 9px;
+    padding: 15px 26px; border-radius: 50px; font-size: 13px; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none;
+    border: none; transition: transform 0.2s, box-shadow 0.2s; -webkit-tap-highlight-color: transparent;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn svg { width: 17px; height: 17px; flex-shrink: 0; }
+  .btn-primary { background: linear-gradient(135deg, var(--coffee-light), var(--coffee)); color: #fff; box-shadow: 0 8px 24px rgba(139,94,60,0.35); }
+  .btn-primary:hover { box-shadow: 0 10px 30px rgba(139,94,60,0.5); }
+  .btn-secondary { background: rgba(250,246,240,0.15); color: #FAF6F0; border: 1.5px solid rgba(250,246,240,0.45); backdrop-filter: blur(8px); }
+  .btn-secondary:hover { background: rgba(250,246,240,0.25); }
+  .btn-whatsapp { background: #25D366; color: #fff; box-shadow: 0 8px 24px rgba(37,211,102,0.3); }
+
+  /* ── SECTIONS ── */
+  section { padding: 64px 24px; }
+  .section-tag { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--coffee-light); font-weight: 700; margin-bottom: 10px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(26px, 6vw, 40px); font-weight: 700; color: var(--coffee-dark); line-height: 1.2; margin-bottom: 18px; }
+  .section-title em { font-style: italic; color: var(--coffee); }
+  .section-text { font-size: 15px; line-height: 1.8; color: var(--text-light); font-weight: 300; }
+
+  /* ── ABOUT ── */
+  #about { background: var(--beige); position: relative; overflow: hidden; }
+  #about::before {
+    content: '"'; position: absolute; top: -20px; right: 16px;
+    font-family: 'Playfair Display', serif; font-size: 200px; color: var(--sand);
+    opacity: 0.5; line-height: 1; pointer-events: none;
+  }
+  .about-inner { position: relative; z-index: 1; }
+  .about-img-wrap {
+    margin-bottom: 32px; border-radius: 20px; overflow: hidden; height: 240px;
+    box-shadow: 0 16px 48px rgba(92,61,46,0.18);
+  }
+  .about-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .about-features { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+  .feature-chip { background: var(--cream); border: 1px solid var(--sand); color: var(--coffee-dark); padding: 7px 14px; border-radius: 20px; font-size: 13px; }
+
+  /* ── PRODUCTS ── */
+  #products { background: var(--cream); }
+  .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 36px; }
+  .product-card {
+    border-radius: 18px; overflow: hidden; position: relative; aspect-ratio: 3/4;
+    box-shadow: 0 8px 24px rgba(92,61,46,0.12); cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .product-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(92,61,46,0.2); }
+  .product-bg { width: 100%; height: 100%; position: absolute; inset: 0; }
+  .product-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+  .product-card:hover img { transform: scale(1.05); }
+  .product-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 30%, rgba(44,24,16,0.85) 100%);
+    display: flex; flex-direction: column; justify-content: flex-end; padding: 16px 14px;
+  }
+  .product-icon { font-size: 26px; margin-bottom: 5px; display: block; }
+  .product-name { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: #FAF6F0; margin-bottom: 3px; }
+  .product-desc { font-size: 11px; color: rgba(250,246,240,0.7); font-weight: 300; }
+
+  /* ── GALLERY (compact) ── */
+  #gallery { background: var(--espresso); padding-bottom: 48px; padding-top: 48px; }
+  #gallery .section-tag { color: var(--coffee-light); }
+  #gallery .section-title { color: #FAF6F0; }
+  .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin-top: 28px; }
+  .gallery-item { aspect-ratio: 1; overflow: hidden; cursor: pointer; }
+  .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; filter: brightness(0.9); }
+  .gallery-item:hover img { transform: scale(1.08); filter: brightness(1); }
+
+  /* ── LOCATION ── */
+  #location { background: var(--beige); text-align: center; }
+  .map-container { margin: 28px 0; border-radius: 20px; overflow: hidden; box-shadow: 0 12px 36px rgba(92,61,46,0.15); height: 240px; }
+  .map-container iframe { width: 100%; height: 100%; border: none; display: block; }
+  .location-info { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; text-align: left; }
+  .location-item {
+    display: flex; align-items: flex-start; gap: 12px; padding: 13px 15px;
+    background: var(--cream); border-radius: 13px; border: 1px solid var(--sand);
+    text-decoration: none; color: var(--text); transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .location-item:hover { border-color: var(--coffee-light); box-shadow: 0 4px 12px rgba(139,94,60,0.1); }
+  .location-item svg { width: 18px; height: 18px; color: var(--coffee); flex-shrink: 0; margin-top: 2px; }
+  .location-item-text { font-size: 14px; line-height: 1.5; color: var(--text); }
+  .location-item-label { font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--coffee-light); margin-bottom: 2px; }
+
+  /* ── FOOTER ── */
+  footer { background: var(--espresso); padding: 44px 24px 28px; border-top: 1px solid rgba(196,152,106,0.15); }
+  .footer-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: #FAF6F0; margin-bottom: 4px; }
+  .footer-tagline { font-size: 12px; color: var(--coffee-light); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 300; margin-bottom: 28px; }
+  .footer-links { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+  .footer-link { display: flex; align-items: center; gap: 12px; color: rgba(250,246,240,0.6); font-size: 14px; text-decoration: none; font-weight: 300; transition: color 0.2s; }
+  .footer-link:hover { color: var(--coffee-light); }
+  .footer-link svg { width: 16px; height: 16px; color: var(--coffee-light); flex-shrink: 0; }
+  .footer-divider { border: none; border-top: 1px solid rgba(250,246,240,0.08); margin: 20px 0; }
+  .footer-bottom { font-size: 12px; color: rgba(250,246,240,0.3); text-align: center; font-weight: 300; }
+
+  /* ── REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* ── DESKTOP ── */
+  @media (min-width: 640px) {
+    .hero-buttons { flex-direction: row; flex-wrap: wrap; }
+    .products-grid { grid-template-columns: repeat(4, 1fr); }
+    section { padding: 80px 48px; }
+    .about-img-wrap { height: 320px; }
+    .hero-arrow { width: 48px; height: 48px; }
+    .hero-arrow.prev { left: 24px; }
+    .hero-arrow.next { right: 24px; }
+  }
+  @media (min-width: 900px) {
+    .about-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .about-img-wrap { margin-bottom: 0; height: 400px; }
+    section { padding: 96px 60px; }
+    nav { padding: 20px 48px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Alimenta<span>Almacén y Café</span></div>
+  <div class="nav-links">
+    <a href="#about">Nosotros</a>
+    <a href="#location">Ubicación</a>
+    <a href="https://wa.me/5491139144645" target="_blank">WhatsApp</a>
+  </div>
+</nav>
+
+<!-- HERO SLIDER -->
+<section id="hero">
+  <div class="hero-slides">
+    <div class="hero-slide active" style="background-image:url('fotos/exterior.jpeg')"></div>
+    <div class="hero-slide" style="background-image:url('fotos/cafe.jpeg')"></div>
+    <div class="hero-slide" style="background-image:url('fotos/merienda.jpeg')"></div>
+    <div class="hero-slide" style="background-image:url('fotos/cafe_frio_alfajor.jpeg')"></div>
+    <div class="hero-slide" style="background-image:url('fotos/cafe_corazon.jpeg')"></div>
+    <div class="hero-slide" style="background-image:url('fotos/interior.jpeg')"></div>
+    <div class="hero-slide" style="background-image:url('fotos/exterior_con_arbol.jpeg')"></div>
+    <div class="hero-slide" style="background-image:url('fotos/cafe_pudin_chia.jpeg')"></div>
+    <div class="hero-slide" style="background-image:url('fotos/latte.jpeg')"></div>
+    <div class="hero-slide" style="background-image:url('fotos/pudin_chia.jpeg')"></div>
+    <div class="hero-slide" style="background-image:url('fotos/cafe_preparacion.jpeg')"></div>
+    <div class="hero-slide" style="background-image:url('fotos/cafe_con_leche.jpeg')"></div>
+    <div class="hero-slide" style="background-image:url('fotos/barra_interior_de_cafe.jpeg')"></div>
+    <div class="hero-slide" style="background-image:url('fotos/exterior_con_sol.jpeg')"></div>
+    <div class="hero-slide" style="background-image:url('fotos/cartel_exterior.jpeg')"></div>
+  </div>
+
+  <!-- Flechas -->
+  <button class="hero-arrow prev" aria-label="Anterior">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <button class="hero-arrow next" aria-label="Siguiente">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 6 15 12 9 18"/></svg>
+  </button>
+
+  <!-- Dots -->
+  <div class="hero-dots" id="heroDots"></div>
+
+  <div class="hero-content">
+    <div class="hero-tag">☕ Abierto todos los días</div>
+    <h1 class="hero-title">Alimenta<br><em>Almacén</em><br>y Café</h1>
+    <p class="hero-subtitle">Café, alimentos naturales y sabores caseros</p>
+    <div class="hero-buttons">
+      <a href="https://www.instagram.com/alimentaalmacenycafe" target="_blank" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        Ver Instagram
+      </a>
+      <a href="https://www.google.com/maps/search/Tupungato+5561+Mendoza+Argentina" target="_blank" class="btn btn-secondary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Cómo llegar
+      </a>
+      <a href="https://wa.me/5491139144645?text=Hola!%20Quisiera%20hacer%20un%20pedido" target="_blank" class="btn btn-whatsapp">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Pedir por WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-inner about-layout reveal">
+    <div class="about-img-wrap">
+      <img src="fotos/interior.jpeg" alt="Interior de Alimenta" loading="lazy">
+    </div>
+    <div>
+      <p class="section-tag">Nuestra historia</p>
+      <h2 class="section-title">Un rincón para <em>reconectar</em></h2>
+      <p class="section-text">Alimenta es mucho más que un café. Es un espacio pensado con amor para quienes buscan pausar, nutrir el cuerpo y el alma. Encontrarás café de especialidad, pastelería artesanal y un almacén lleno de productos naturales seleccionados con cuidado.</p>
+      <p class="section-text" style="margin-top:14px">Un lugar donde cada detalle importa: el aroma del café recién preparado y la calidez de nuestra gente.</p>
+      <div class="about-features">
+        <span class="feature-chip">☕ Café de especialidad</span>
+        <span class="feature-chip">🌿 Productos naturales</span>
+        <span class="feature-chip">🥐 Pastelería artesanal</span>
+        <span class="feature-chip">💛 Con amor</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <p class="section-tag reveal">Lo que ofrecemos</p>
+  <h2 class="section-title reveal">Nuestra <em>propuesta</em></h2>
+  <div class="products-grid">
+    <div class="product-card reveal" style="transition-delay:0.1s">
+      <div class="product-bg" style="background:linear-gradient(160deg,#6B3A2A,#2C1810)"></div>
+      <img src="fotos/cafe.jpeg" alt="Café" loading="lazy">
+      <div class="product-overlay">
+        <span class="product-icon">☕</span>
+        <div class="product-name">Café</div>
+        <div class="product-desc">Especialidad & filtrado</div>
+      </div>
+    </div>
+    <div class="product-card reveal" style="transition-delay:0.2s">
+      <div class="product-bg" style="background:linear-gradient(160deg,#8B5E3C,#4A2E1A)"></div>
+      <img src="fotos/merienda.jpeg" alt="Pastelería" loading="lazy">
+      <div class="product-overlay">
+        <span class="product-icon">🥐</span>
+        <div class="product-name">Pastelería</div>
+        <div class="product-desc">Artesanal y casera</div>
+      </div>
+    </div>
+    <div class="product-card reveal" style="transition-delay:0.3s">
+      <div class="product-bg" style="background:linear-gradient(160deg,#7A6355,#3D2B1F)"></div>
+      <img src="fotos/cafe_pudin_chia.jpeg" alt="Desayunos" loading="lazy">
+      <div class="product-overlay">
+        <span class="product-icon">🍳</span>
+        <div class="product-name">Desayunos</div>
+        <div class="product-desc">Nutritivos y ricos</div>
+      </div>
+    </div>
+    <div class="product-card reveal" style="transition-delay:0.4s">
+      <div class="product-bg" style="background:linear-gradient(160deg,#7A8C6E,#3D4A35)"></div>
+      <img src="fotos/barra_interior_de_cafe.jpeg" alt="Almacén natural" loading="lazy">
+      <div class="product-overlay">
+        <span class="product-icon">🌾</span>
+        <div class="product-name">Almacén natural</div>
+        <div class="product-desc">Selección orgánica</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY (reducida) -->
+<section id="gallery">
+  <p class="section-tag reveal">Galería</p>
+  <h2 class="section-title reveal">Momentos en <em>Alimenta</em></h2>
+  <div class="gallery-grid reveal">
+    <div class="gallery-item"><img src="fotos/cafe_con_leche.jpeg" alt="Café con leche" loading="lazy"></div>
+    <div class="gallery-item"><img src="fotos/cafe_preparacion.jpeg" alt="Preparando café" loading="lazy"></div>
+    <div class="gallery-item"><img src="fotos/latte.jpeg" alt="Latte" loading="lazy"></div>
+    <div class="gallery-item"><img src="fotos/pudin_chia.jpeg" alt="Pudín de chía" loading="lazy"></div>
+    <div class="gallery-item"><img src="fotos/exterior_con_arbol.jpeg" alt="Exterior primavera" loading="lazy"></div>
+    <div class="gallery-item"><img src="fotos/cartel_exterior.jpeg" alt="Cartel" loading="lazy"></div>
+  </div>
+</section>
+
+<!-- LOCATION -->
+<section id="location">
+  <p class="section-tag reveal" style="text-align:center">Encontranos</p>
+  <h2 class="section-title reveal" style="text-align:center">¿Dónde <em>estamos</em>?</h2>
+  <div class="map-container reveal">
+    <iframe src="https://maps.google.com/maps?q=Tupungato+5561+Mendoza+Argentina&output=embed&z=16"
+      allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Ubicación Alimenta">
+    </iframe>
+  </div>
+  <div class="location-info reveal">
+    <a href="https://www.google.com/maps/search/Tupungato+5561+Mendoza+Argentina" target="_blank" class="location-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <div class="location-item-text">
+        <div class="location-item-label">Dirección</div>
+        Tupungato 5561, Mendoza, Argentina
+      </div>
+    </a>
+    <div class="location-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <div class="location-item-text">
+        <div class="location-item-label">Horarios</div>
+        Lunes a viernes: 9:00 – 13:00 y 17:00 – 21:00 · Sábados: 10:00 – 13:00
+      </div>
+    </div>
+    <a href="https://wa.me/5491139144645?text=Hola!" target="_blank" class="location-item">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      <div class="location-item-text">
+        <div class="location-item-label">WhatsApp</div>
+        +54 9 11 3914-4645
+      </div>
+    </a>
+    <a href="mailto:alimentaalmacen@gmail.com" class="location-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      <div class="location-item-text">
+        <div class="location-item-label">Email</div>
+        alimentaalmacen@gmail.com
+      </div>
+    </a>
+  </div>
+  <div style="text-align:center" class="reveal">
+    <a href="https://www.google.com/maps/search/Tupungato+5561+Mendoza+Argentina" target="_blank" class="btn btn-primary" style="display:inline-flex">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Cómo llegar
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Alimenta</div>
+  <div class="footer-tagline">Almacén y Café</div>
+  <div class="footer-links">
+    <a href="https://www.instagram.com/alimentaalmacenycafe" target="_blank" class="footer-link">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      @alimentaalmacenycafe
+    </a>
+    <a href="https://wa.me/5491139144645" target="_blank" class="footer-link">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      +54 9 11 3914-4645
+    </a>
+    <a href="mailto:alimentaalmacen@gmail.com" class="footer-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      alimentaalmacen@gmail.com
+    </a>
+    <div class="footer-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Lun–Vie 9:00–13:00 y 17:00–21:00 · Sáb 10:00–13:00
+    </div>
+  </div>
+  <hr class="footer-divider">
+  <p class="footer-bottom">© 2025 Alimenta Almacén y Café · Hecho con ♥</p>
+</footer>
+
+<script>
+  // ── HERO SLIDER ──
+  const slides = document.querySelectorAll('.hero-slide');
+  const dotsContainer = document.getElementById('heroDots');
+  let current = 0;
+  let timer;
+
+  // Create dots
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'hero-dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', () => goTo(i));
+    dotsContainer.appendChild(dot);
+  });
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    document.querySelectorAll('.hero-dot')[current].classList.remove('active');
+    current = (n + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    document.querySelectorAll('.hero-dot')[current].classList.add('active');
+    resetTimer();
+  }
+
+  function resetTimer() {
+    clearInterval(timer);
+    timer = setInterval(() => goTo(current + 1), 4000);
+  }
+
+  document.querySelector('.hero-arrow.next').addEventListener('click', () => goTo(current + 1));
+  document.querySelector('.hero-arrow.prev').addEventListener('click', () => goTo(current - 1));
+
+  // Touch/swipe support
+  let touchStartX = 0;
+  document.getElementById('hero').addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  document.getElementById('hero').addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) goTo(diff > 0 ? current + 1 : current - 1);
+  }, { passive: true });
+
+  resetTimer();
+
+  // ── SCROLL REVEAL ──
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // ── NAV SCROLL ──
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav.style.background = window.scrollY > 40 ? 'rgba(250,246,240,0.97)' : 'rgba(250,246,240,0.92)';
+  }, { passive: true });
+</script>
+</body>
+</html>
