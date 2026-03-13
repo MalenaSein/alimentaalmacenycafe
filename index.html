@@ -62,7 +62,7 @@
 
   /* Dots */
   .hero-dots {
-    position: absolute; bottom: 160px; left: 50%; transform: translateX(-50%);
+    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
     display: flex; gap: 8px; z-index: 3;
   }
   .hero-dot {
@@ -74,18 +74,18 @@
 
   /* Arrows */
   .hero-arrow {
-    position: absolute; top: 50%; transform: translateY(-50%);
+    position: absolute; top: 40%;
     z-index: 3; background: rgba(250,246,240,0.15); border: 1px solid rgba(250,246,240,0.3);
-    color: #FAF6F0; width: 40px; height: 40px; border-radius: 50%;
+    color: #FAF6F0; width: 36px; height: 36px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; transition: background 0.2s; backdrop-filter: blur(4px);
   }
   .hero-arrow:hover { background: rgba(250,246,240,0.25); }
-  .hero-arrow.prev { left: 16px; }
-  .hero-arrow.next { right: 16px; }
-  .hero-arrow svg { width: 18px; height: 18px; }
+  .hero-arrow.prev { left: 12px; }
+  .hero-arrow.next { right: 12px; }
+  .hero-arrow svg { width: 16px; height: 16px; }
 
-  .hero-content { position: relative; z-index: 2; padding: 48px 28px 56px; width: 100%; animation: fadeUp 1s 0.3s both; }
+  .hero-content { position: relative; z-index: 2; padding: 48px 28px 72px; width: 100%; animation: fadeUp 1s 0.3s both; }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
   .hero-tag {
     display: inline-block; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
@@ -370,7 +370,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
       <div class="location-item-text">
         <div class="location-item-label">Dirección</div>
-        Bartolomé Mitre 117 esquina Almirante brown, Villa Tupungato, Mendoza, Argentina
+        Almirante Brown y Mitre, Tupungato, Mendoza
       </div>
     </a>
     <div class="location-item">
